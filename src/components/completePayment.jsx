@@ -4,7 +4,6 @@ import {
   Typography,
   SvgIcon,
 } from "@material-ui/core";
-import config from "../config";
 
 function TickIcon(props) {
   const { color } = props;
@@ -52,29 +51,7 @@ class CompletePayment extends Component {
   renderSuccess() {
     let { theme, chain, transactionID } = this.props
 
-    let url = ''
-    switch (chain) {
-      case 'Aion':
-        url = config.aionscanURL + transactionID;
-        break;
-      case 'Binance':
-        url = config.binancescanURL + transactionID;
-        break;
-      case 'Bitcoin':
-        url = config.bitcoinscanURL + transactionID;
-        break;
-      case 'Ethereum':
-        url = config.etherscanUrl + transactionID;
-        break;
-      case 'Tezos':
-        url = config.tezosscanURL + transactionID;
-        break;
-      case 'Wanchain':
-        url = config.wanscanURL + transactionID;
-        break;
-      default:
-        break;
-    }
+    let url = 'https://etherscan.io/tx/' + transactionID
 
     return (
       <Grid

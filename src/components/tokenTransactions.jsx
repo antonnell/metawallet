@@ -22,7 +22,6 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-import config from "../config";
 import ListItemText from "@material-ui/core/ListItemText";
 import { colors } from '../theme.js';
 
@@ -461,31 +460,7 @@ class EnhancedTable extends React.Component {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(n => {
 
-                  let url = ''
-                  switch (token) {
-                    case 'Aion':
-                      url = config.aionscanURL + n.transactionId;
-                      break;
-                    case 'Binance':
-                      url = config.binancescanURL + n.transactionId;
-                      break;
-                    case 'Bitcoin':
-                      url = config.bitcoinscanURL + n.transactionId;
-                      break;
-                    case 'Ethereum':
-                    case 'ERC20':
-                      url = config.etherscanUrl + n.transactionId;
-                      break;
-                    case 'Tezos':
-                      url = config.tezosscanURL + n.transactionId;
-                      break;
-                    case 'Wanchain':
-                    case 'WRC20':
-                      url = config.wanscanURL + n.transactionId;
-                      break;
-                    default:
-                      break;
-                  }
+                  let url = 'https://etherscan.io/tx/' + n.transactionId
 
                   return (
                     <TableRow hover tabIndex={-1} key={n.transactionId}>

@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import config from "../config";
 import async from "async";
 
 import Web3 from 'web3';
