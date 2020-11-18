@@ -1,6 +1,13 @@
 import fetch from 'node-fetch';
 import Web3 from 'web3';
 
+import {
+  ERROR,
+  STORE_UPDATED,
+  CONNECT_WALLET,
+  CONNECT_WALLET_RETURNED,
+} from '../constants'
+
 const Dispatcher = require('flux').Dispatcher;
 const Emitter = require('events').EventEmitter;
 
@@ -21,7 +28,7 @@ class Store {
     dispatcher.register(
       payload => {
         switch (payload.type) {
-          case 'connectWallet':
+          case CONNECT_WALLET:
             this.connectWallet(payload);
             break;
           default: {
@@ -36,7 +43,7 @@ class Store {
 
   setStore(obj) {
     this.store = {...this.store, ...obj}
-    return emitter.emit('StoreUpdated');
+    return emitter.emit(STORE_UPDATED);
   };
 
   connectWallet = payload => {
@@ -76,10 +83,10 @@ class Store {
         console.log(account)
 
         that.setStore({ account: account });
-        emitter.emit('connectWalletReturned', null, account)
+        emitter.emit(CONNECT_WALLET_RETURNED, null, account)
       });
     } else {
-      emitter.emit('connectWalletReturned', "Metamask isn't enabled. Please install and enable Metamask to connect.", null);
+      emitter.emit(CONNECT_WALLET_RETURNED, "Metamask isn't enabled. Please install and enable Metamask to connect.", null);
     }
   };
 }

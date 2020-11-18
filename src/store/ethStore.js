@@ -3,6 +3,16 @@ import async from "async";
 
 import Web3 from 'web3';
 
+import {
+  ERROR,
+  STORE_UPDATED,
+  GET_BALANCES,
+  BALANCES_RETURNED,
+  GET_GAS_PRICE,
+  GAS_PRICE_RETURNED,
+  CONNECT_WALLET_RETURNED
+} from '../constants'
+
 import { ERC20ABI } from "./abi/erc20ABI";
 
 const rp = require('request-promise');
@@ -18,6 +28,7 @@ const emitter = new Emitter();
 class Store {
   constructor() {
     this.store = {
+      universalGasPrice: '70',
       accounts: null,
       accountsCombined: null,
       erc20Accounts: null,
@@ -150,8 +161,11 @@ class Store {
     dispatcher.register(
       function (payload) {
         switch (payload.type) {
-          case 'getBalances':
+          case GET_BALANCES:
             this.getBalances(payload);
+            break;
+          case GET_GAS_PRICE:
+            this.getGasPrice(payload);
             break;
           default: {
           }
@@ -167,7 +181,7 @@ class Store {
 
   setStore(obj) {
     this.store = {...this.store, ...obj}
-    return emitter.emit('StoreUpdated');
+    return emitter.emit(STORE_UPDATED);
   };
 
   _getWeb3Provider = () => {
@@ -209,11 +223,11 @@ class Store {
       })
     }, (err, resultAssets) => {
       if(err) {
-        return emitter.emit('connectWalletReturned', err)
+        return emitter.emit(CONNECT_WALLET_RETURNED, err)
       }
 
       store.setStore({ assets: resultAssets })
-      return emitter.emit('getBalancesReturned')
+      return emitter.emit(BALANCES_RETURNED)
     })
   };
 
@@ -245,6 +259,26 @@ class Store {
     } catch(e) {
       console.log(e)
       return null
+    }
+  }
+
+  getGasPrice = () => {
+    const price = this._getGasPrice()
+    emitter.emit(GAS_PRICE_RETURNED, null, price)
+  }
+
+  _getGasPrice = async () => {
+    try {
+      const url = 'https://gasprice.poa.network/'
+      const priceString = await rp(url);
+      const priceJSON = JSON.parse(priceString)
+      if(priceJSON) {
+        return priceJSON.fast.toFixed(0)
+      }
+      return store.getStore('universalGasPrice')
+    } catch(e) {
+      console.log(e)
+      return store.getStore('universalGasPrice')
     }
   }
 }

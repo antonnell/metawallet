@@ -2,6 +2,12 @@ import React from "react";
 import ConnectWalletComponent from "../components/connectWallet";
 
 import createReactClass from "create-react-class";
+
+import {
+  CONNECT_WALLET,
+  CONNECT_WALLET_RETURNED
+} from '../constants'
+
 let emitter = require("../store/accountStore.js").default.emitter;
 let dispatcher = require("../store/accountStore.js").default.dispatcher;
 
@@ -14,11 +20,11 @@ let ConnectWallet = createReactClass({
   },
 
   componentWillMount() {
-    emitter.on("connectWalletReturned", this.connectWalletReturned);
+    emitter.on(CONNECT_WALLET_RETURNED, this.connectWalletReturned);
   },
 
   componentWillUnmount() {
-    emitter.removeListener("connectWalletReturned", this.connectWalletReturned);
+    emitter.removeListener(CONNECT_WALLET_RETURNED, this.connectWalletReturned);
   },
 
   render() {
@@ -40,7 +46,7 @@ let ConnectWallet = createReactClass({
       this.props.setError(null)
 
       this.props.startLoading()
-      dispatcher.dispatch({ type: "connectWallet", content: {} });
+      dispatcher.dispatch({ type: CONNECT_WALLET, content: {} });
     }
   },
 

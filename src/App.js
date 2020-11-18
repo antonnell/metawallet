@@ -13,6 +13,16 @@ import Transact from './containers/transact';
 
 import PageLoader from './components/pageLoader';
 
+import {
+  ERROR,
+  CONNECT_WALLET,
+  CONNECT_WALLET_RETURNED,
+  GET_BALANCES,
+  BALANCES_RETURNED,
+  GET_GAS_PRICE,
+  GAS_PRICE_RETURNED,
+} from './constants'
+
 let accountEmitter = require("./store/accountStore.js").default.emitter;
 let accountDispatcher = require("./store/accountStore.js").default.dispatcher;
 let accountStore = require("./store/accountStore.js").default.store;
@@ -55,18 +65,18 @@ class App extends Component {
     const account = accountStore.getStore('account')
 
     if(!account) {
-      accountDispatcher.dispatch({ type: 'connectWallet', content: {} })
+      accountDispatcher.dispatch({ type: CONNECT_WALLET, content: {} })
     }
   }
 
   componentWillMount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
 
-    ethEmitter.removeListener('getBalancesReturned', this.getBalancesReturned)
-    ethEmitter.on('getBalancesReturned', this.getBalancesReturned)
+    ethEmitter.removeListener(BALANCES_RETURNED, this.getBalancesReturned)
+    ethEmitter.on(BALANCES_RETURNED, this.getBalancesReturned)
 
-    accountEmitter.removeListener('connectWalletReturned', this.connectWalletReturned)
-    accountEmitter.on('connectWalletReturned', this.connectWalletReturned)
+    accountEmitter.removeListener(CONNECT_WALLET_RETURNED, this.connectWalletReturned)
+    accountEmitter.on(CONNECT_WALLET_RETURNED, this.connectWalletReturned)
 
     this.updateWindowDimensions();
     window.addEventListener("resize", this.updateWindowDimensions);
@@ -166,7 +176,7 @@ class App extends Component {
 
   getAllAssets() {
     ethDispatcher.dispatch({
-      type: 'getBalances',
+      type: GET_BALANCES,
       content: {}
     });
   }
