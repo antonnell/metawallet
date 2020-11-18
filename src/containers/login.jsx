@@ -25,7 +25,7 @@ let Login = createReactClass({
   },
 
   componentWillUnmount() {
-    emitter.removeAllListeners("login");
+    emitter.removeListener("login", this.loginReturned);
   },
 
   render() {

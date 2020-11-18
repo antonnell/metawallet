@@ -94,7 +94,7 @@ class AppDrawer extends Component {
         <ListItem
           button
           onClick={ event => {
-            // logUserOut();
+            logUserOut();
           } }
           style={theme.custom.logout}
         >

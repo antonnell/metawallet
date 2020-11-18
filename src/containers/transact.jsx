@@ -64,7 +64,7 @@ let Transact = createReactClass({
   },
 
   componentWillMount() {
-    ethEmitter.removeAllListeners('sendReturned')
+    ethEmitter.removeListener('sendReturned', this.sendReturned)
 
     ethEmitter.on('sendReturned', this.sendReturned)
   },

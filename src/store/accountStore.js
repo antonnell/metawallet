@@ -73,6 +73,8 @@ class Store {
           web3: window.web3
         }
 
+        console.log(account)
+
         that.setStore({ account: account });
         emitter.emit('connectWalletReturned', null, account)
       });

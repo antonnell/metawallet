@@ -18,7 +18,7 @@ let ConnectWallet = createReactClass({
   },
 
   componentWillUnmount() {
-    emitter.removeAllListeners("connectWalletReturned");
+    emitter.removeListener("connectWalletReturned", this.connectWalletReturned);
   },
 
   render() {
@@ -45,7 +45,6 @@ let ConnectWallet = createReactClass({
   },
 
   connectWalletReturned(error, data) {
-    console.log('connectWalletReturned')
     this.setState({ loading: false });
     this.props.stopLoading()
     if (error) {

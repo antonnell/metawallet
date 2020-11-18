@@ -54,7 +54,7 @@ let Accounts = createReactClass({
   },
 
   componentWillMount() {
-    ethEmitter.removeAllListeners('error');
+    ethEmitter.removeListener('error', this.showError);
     ethEmitter.on("error", this.showError);
   },
 

@@ -45,7 +45,7 @@ class App extends Component {
     this.changeTheme = this.changeTheme.bind(this);
 
     this.setAccount = this.setAccount.bind(this);
-    // this.logUserOut = this.logUserOut.bind(this);
+    this.logUserOut = this.logUserOut.bind(this);
 
     this.openDrawer = this.openDrawer.bind(this);
     this.closeDrawer = this.closeDrawer.bind(this);
@@ -62,9 +62,6 @@ class App extends Component {
   componentWillMount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
 
-    ethEmitter.removeAllListeners('Unauthorised');
-    accountEmitter.removeAllListeners('Unauthorised');
-
     ethEmitter.removeListener('getBalancesReturned', this.getBalancesReturned)
     ethEmitter.on('getBalancesReturned', this.getBalancesReturned)
 
@@ -79,6 +76,7 @@ class App extends Component {
   }
 
   connectWalletReturned = () => {
+    console.log(accountStore.getStore('account'))
     this.setState({ account: accountStore.getStore('account') })
     this.getAllAssets()
   }
@@ -119,14 +117,14 @@ class App extends Component {
     window.location.hash = currentScreen;
   }
 
-  // logUserOut = () => {
-  //   this.resetStores()
-  //   window.location.hash = "welcome";
-  // };
+  logUserOut = () => {
+    this.resetStores()
+    window.location.hash = "welcome";
+  };
 
   resetStores() {
-    ethStore.setStore({
-      assets: null,
+    accountStore.setStore({
+      account: null
     })
   }
 
@@ -158,7 +156,6 @@ class App extends Component {
     if (this.state.account) {
       const path = currentScreen.split('/')[0];
 
-      console.log(path)
       if (['#accounts', '#ethAccounts'].includes(path) ) {
         this.getAllAssets()
       }
@@ -203,6 +200,7 @@ class App extends Component {
           open={ this.state.drawerOpen }
           size={ this.state.size }
           theme={ this.state.theme }
+          logUserOut={ this.logUserOut }
         />
       );
     }
